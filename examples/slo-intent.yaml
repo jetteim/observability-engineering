@@ -1,0 +1,19 @@
+apiVersion: observability.platform/v1alpha1
+kind: SLOIntent
+metadata:
+  name: checkout-api-availability
+target:
+  application: checkout
+  service: checkout-api
+  environment: production
+  userJourney: checkout
+sli:
+  type: availability
+  successCondition: HTTP server requests complete without server-side failure.
+  evaluationBasis: request
+objective:
+  target: 99.9
+  window: 30d
+telemetryBinding: checkout-api-availability-http-requests
+burnRatePolicy: standard-multi-window
+

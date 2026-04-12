@@ -1,0 +1,27 @@
+# Observability Engineering Skill
+
+Reusable Codex skill for building platform-agnostic observability from neutral intent.
+
+The skill is meant to work with a local model repo when present:
+
+```text
+~/Library/CloudStorage/OneDrive-Personal/Pet projects/platform-observability-model
+```
+
+It can still operate from its bundled references when the private model is unavailable.
+
+## Install
+
+Copy `skill/observability-engineering` into a Codex skills directory, for example:
+
+```bash
+mkdir -p ~/.codex/skills/observability-engineering
+cp -R skill/observability-engineering/. ~/.codex/skills/observability-engineering/
+```
+
+## Validate
+
+```bash
+./scripts/validate.sh
+```
+

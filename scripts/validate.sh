@@ -11,5 +11,7 @@ grep -q '^name: observability-engineering$' skill/observability-engineering/SKIL
 grep -q 'Use when building platform or application observability' skill/observability-engineering/SKILL.md
 grep -q 'dynamic decision dashboard' skill/observability-engineering/SKILL.md
 grep -q 'SRE rules are generated outputs' skill/observability-engineering/SKILL.md
+grep -q 'service-onboarding-to-observability.md' skill/observability-engineering/SKILL.md
+grep -q 'Usage Scenario Pattern' references/observability-model-summary.md
 
 echo "validation ok"

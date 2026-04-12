@@ -43,3 +43,17 @@ SLO intent should define:
 
 Backend rules are generated from this interface.
 
+## Usage Scenario Pattern
+
+When onboarding a service, work as an agent-first process with human review gates:
+
+1. Establish stable service identity, owner, criticality, telemetry tier, and data classification.
+2. Apply OpenTelemetry semantic conventions and minimal org extensions.
+3. Define service observability intent.
+4. Define SLO intent.
+5. Bind SLOs to existing telemetry or record instrumentation gaps.
+6. Classify signals as alerts, notifications, or findings.
+7. Require full alert context before paging.
+8. Define a dynamic decision dashboard scoped from alert dimensions.
+9. Generate backend artifacts from approved intent.
+10. Enforce through local validation, CI, Helm, admission policy, and runtime drift checks.

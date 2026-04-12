@@ -43,6 +43,10 @@ SLO intent should define:
 
 Backend rules are generated from this interface.
 
+## Reliability Boundary
+
+Incident aftercare, postmortems, miss-policy, action items, resilience experiments, and operational readiness belong to the reliability model. Use observability work only for telemetry, SLO bindings, alert context, decision dashboards, and backend artifacts.
+
 ## Usage Scenario Pattern
 
 When onboarding a service, work as an agent-first process with human review gates:

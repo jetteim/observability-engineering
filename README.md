@@ -1,6 +1,6 @@
 # Observability Engineering Skill
 
-Reusable Codex skill for building platform-agnostic observability from neutral intent.
+Reusable agent-agnostic skill for building platform-agnostic observability from neutral intent.
 
 The skill is meant to work with a local model repo when present:
 
@@ -12,11 +12,11 @@ It can still operate from its bundled references when the private model is unava
 
 ## Install
 
-Copy `skill/observability-engineering` into a Codex skills directory, for example:
+Copy `skill/observability-engineering` into the skill directory used by your agent runtime. For a portable shell install, set `SKILLS_DIR` first:
 
 ```bash
-mkdir -p ~/.codex/skills/observability-engineering
-cp -R skill/observability-engineering/. ~/.codex/skills/observability-engineering/
+mkdir -p "$SKILLS_DIR/observability-engineering"
+cp -R skill/observability-engineering/. "$SKILLS_DIR/observability-engineering/"
 ```
 
 ## Validate
@@ -24,4 +24,3 @@ cp -R skill/observability-engineering/. ~/.codex/skills/observability-engineerin
 ```bash
 ./scripts/validate.sh
 ```
-

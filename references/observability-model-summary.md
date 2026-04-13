@@ -49,7 +49,7 @@ Incident aftercare, postmortems, miss-policy, action items, resilience experimen
 
 ## Usage Scenario Pattern
 
-When onboarding a service, work as an agent-first process with human review gates:
+When onboarding a service, work as an intent-first process with human review gates:
 
 1. Establish stable service identity, owner, criticality, telemetry tier, and data classification.
 2. Apply OpenTelemetry semantic conventions and minimal org extensions.

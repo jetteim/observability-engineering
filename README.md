@@ -1,6 +1,6 @@
 # Observability Engineering Skill
 
-Reusable agent-agnostic skill for building platform-agnostic observability from neutral intent.
+Reusable agent-agnostic skill for building platform-agnostic observability from neutral intent, including infrastructure observability readiness.
 
 The skill is meant to work with the private model repo when present. The preferred checkout is the source mirror created by the workstation installer:
 

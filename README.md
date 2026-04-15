@@ -1,6 +1,6 @@
 # Observability Engineering Skill
 
-Reusable agent-agnostic skill for building platform-agnostic observability from neutral intent, including infrastructure observability readiness.
+Reusable agent-agnostic skill for building platform-agnostic observability from neutral intent, including infrastructure observability readiness and telemetry pipeline intent.
 
 The skill is meant to work with the private model repo when present. The preferred checkout is the source mirror created by the workstation installer:
 
@@ -15,6 +15,10 @@ It also recognizes this legacy workspace checkout:
 ```
 
 It can still operate from its bundled references when the private model is unavailable.
+
+## Usage Expectations
+
+When telemetry collection, transformation, buffering, routing, or delivery can affect SLOs, alert evidence, security, audit, cost, or backend generation, the skill should treat the telemetry pipeline as part of the observability intent. It should define source-to-sink lineage, component contracts, delivery policy, buffer policy, validation, self-observability, and generation gaps before producing backend-specific artifacts.
 
 ## Install With Private Model Fetch
 

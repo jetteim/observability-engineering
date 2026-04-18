@@ -1,0 +1,72 @@
+source_prompt: tests/scenarios/checkout-observability.prompt.md
+expected_artifacts:
+  - ObservabilityIntent
+  - TelemetryContract
+  - SloIntent
+  - AlertContextContract
+  - DecisionDashboardPlan
+  - BackendArtifactManifest
+  - PipelineHandoff
+  - VerificationEvidence
+required_contents:
+  ObservabilityIntent:
+    service: checkout-api
+    environment: production
+    consumers:
+      - incident-response
+      - slo-review
+      - release-readiness
+    constraints:
+      platform_agnostic: true
+      backend_specific_resources_are_generated_outputs: true
+  TelemetryContract:
+    required_resource_attributes:
+      - service.name
+      - service.owner
+      - deployment.environment
+      - service.version
+    correlation:
+      - trace.id
+      - span.id
+      - deployment.id
+    signal_families:
+      - metrics
+      - logs
+      - traces
+      - events
+  SloIntent:
+    sli:
+      name: checkout_success_ratio
+      good_events: paid orders
+      total_events: checkout attempts
+    objective: 99.5% over 28d
+  AlertContextContract:
+    required_context:
+      - owner
+      - affected journey
+      - recent deploy
+      - dependency health
+      - runbook
+  DecisionDashboardPlan:
+    views:
+      - checkout reliability decision dashboard
+      - release readiness dashboard
+    questions:
+      - Is checkout healthy for users now?
+      - Is a recent deploy correlated with reliability loss?
+  BackendArtifactManifest:
+    generated_outputs:
+      - SRE rule definitions
+      - dashboard resources
+      - semantic convention mapping
+  PipelineHandoff:
+    skill: creating-observability-pipelines
+    requires:
+      - source-to-sink lineage
+      - delivery policy
+      - pipeline self-observability
+  VerificationEvidence:
+    target: checkout-api observability intent
+    command: ./scripts/run-exercise.sh
+    output_path: tests/scenarios/checkout-observability.actual.yaml
+    rollback_path: revert this repository commit and reinstall the previous skill copy

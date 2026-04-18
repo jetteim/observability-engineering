@@ -1,0 +1,76 @@
+artifacts:
+  ProviderTerraformAdapterManifest:
+    source_intent:
+      - ObservabilityIntent
+      - SloIntent
+      - AlertContextContract
+      - DecisionDashboardPlan
+      - reliability evidence
+    rules:
+      provider_resources_are_generated_outputs: true
+      no_secrets_in_generated_terraform: true
+      unsupported_provider_capabilities_are_reported_as_gaps: true
+    target: checkout-api provider Terraform adapters
+
+  DatadogTerraformAdapter:
+    provider:
+      source: DataDog/datadog
+      version_constraint: ">= 4.4.0, < 5.0.0"
+    resource_types:
+      - datadog_service_level_objective
+      - datadog_monitor
+      - datadog_dashboard
+    generated_for:
+      - checkout_success_ratio
+      - checkout_error_budget_burn_rate
+      - checkout reliability decision dashboard
+    source_mapping:
+      datadog_service_level_objective: SloIntent.checkout_success_ratio
+      datadog_monitor: AlertContextContract.checkout_error_budget_burn_rate
+      datadog_dashboard: DecisionDashboardPlan.checkout reliability decision dashboard
+    validation_commands:
+      - terraform fmt -check
+      - terraform init -backend=false
+      - terraform validate
+      - terraform plan -refresh=false -out=tfplan
+
+  ElasticTerraformAdapter:
+    provider:
+      source: elastic/elasticstack
+      version_constraint: ">= 0.14.2, < 1.0.0"
+    resource_types:
+      - elasticstack_kibana_space
+      - elasticstack_kibana_slo
+      - elasticstack_kibana_action_connector
+    generated_for:
+      - checkout_success_ratio
+      - checkout reliability workspace
+      - checkout reliability evidence connector
+    gaps:
+      - dashboard generation may require saved object export/import or Kibana API validation
+      - alert rule generation requires rule type parameter schema validation
+    validation_commands:
+      - terraform fmt -check
+      - terraform init -backend=false
+      - terraform validate
+      - terraform plan -refresh=false -out=tfplan
+
+  GeneratedTerraformFiles:
+    files:
+      - examples/providers/datadog/checkout-observability/main.tf
+      - examples/providers/elastic/checkout-observability/main.tf
+
+  ProviderValidationPlan:
+    target: checkout-api provider Terraform adapters
+    blast_radius: generated example files only; no remote provider apply
+    rollback_path: revert this repository commit and reinstall previous skill copy
+    checks:
+      - neutral source intent is referenced by generated resources
+      - provider credentials are variables or environment-derived only
+      - terraform syntax commands are listed before apply
+      - provider gaps are explicit
+
+  ProviderGenerationEvidence:
+    command: ./scripts/run-exercise.sh
+    output_path: tests/scenarios/provider-terraform-adapters.actual.yaml
+    timestamp: "2026-04-18T00:00:00Z"

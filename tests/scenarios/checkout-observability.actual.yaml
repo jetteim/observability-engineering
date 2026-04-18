@@ -1,0 +1,107 @@
+artifacts:
+  ObservabilityIntent:
+    service: checkout-api
+    environment: production
+    purpose: Give responders and release owners trustworthy checkout reliability evidence.
+    consumers:
+      - incident-response
+      - slo-review
+      - release-readiness
+    constraints:
+      platform_agnostic: true
+      backend_specific_resources_are_generated_outputs: true
+
+  TelemetryContract:
+    required_resource_attributes:
+      - service.name
+      - service.owner
+      - deployment.environment
+      - service.version
+    required_span_attributes:
+      - http.route
+      - http.response.status_code
+      - checkout.step
+      - dependency.service.name
+    correlation:
+      - trace.id
+      - span.id
+      - deployment.id
+    signal_families:
+      - metrics
+      - logs
+      - traces
+      - events
+    source_to_sink_lineage_required: true
+
+  SloIntent:
+    sli:
+      name: checkout_success_ratio
+      good_events: paid orders
+      total_events: checkout attempts
+      source: request and order events with trace correlation
+    objective: 99.5% over 28d
+    burn_alerts:
+      - fast burn for paging
+      - slow burn for backlog review
+
+  AlertContextContract:
+    required_context:
+      - owner
+      - affected journey
+      - recent deploy
+      - dependency health
+      - runbook
+    paging_policy_inputs:
+      - impact window
+      - burn rate
+      - dependency classification
+
+  DecisionDashboardPlan:
+    views:
+      - checkout reliability decision dashboard
+      - release readiness dashboard
+    questions:
+      - Is checkout healthy for users now?
+      - Is a recent deploy correlated with reliability loss?
+    panels:
+      - success ratio and error budget burn
+      - latency by checkout step
+      - dependency error contribution
+      - deploy and incident annotations
+
+  BackendArtifactManifest:
+    generated_outputs:
+      - SRE rule definitions
+      - dashboard resources
+      - semantic convention mapping
+    generation_inputs:
+      - ObservabilityIntent
+      - TelemetryContract
+      - SloIntent
+      - AlertContextContract
+
+  PipelineHandoff:
+    skill: creating-observability-pipelines
+    requires:
+      - source-to-sink lineage
+      - delivery policy
+      - pipeline self-observability
+    reason: collection, transformation, buffering, and delivery are pipeline contract work.
+
+  VerificationEvidence:
+    target: checkout-api observability intent
+    command: ./scripts/run-exercise.sh
+    output_path: tests/scenarios/checkout-observability.actual.yaml
+    metric_names:
+      - checkout_success_ratio
+      - checkout_latency
+      - checkout_error_budget_burn_rate
+      - telemetry_pipeline_delivery_errors
+    log_names:
+      - checkout.error
+      - checkout.dependency_failure
+    trace_names:
+      - checkout.request
+      - payment.authorize
+      - inventory.reserve
+    rollback_path: revert this repository commit and reinstall the previous skill copy

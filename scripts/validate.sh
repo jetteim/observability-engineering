@@ -3,10 +3,20 @@ set -euo pipefail
 
 test -f skill/observability-engineering/SKILL.md
 test -f skill/observability-engineering/references/observability-model-summary.md
+test -f skill/observability-engineering/references/provider-terraform-adapters.md
 test -f references/observability-model-summary.md
 test -f examples/slo-intent.yaml
+test -f tests/scenarios/checkout-observability.prompt.md
+test -f tests/scenarios/checkout-observability.expected.yaml
+test -f tests/scenarios/checkout-observability.actual.yaml
+test -f tests/scenarios/provider-terraform-adapters.prompt.md
+test -f tests/scenarios/provider-terraform-adapters.expected.yaml
+test -f tests/scenarios/provider-terraform-adapters.actual.yaml
+test -f examples/providers/datadog/checkout-observability/main.tf
+test -f examples/providers/elastic/checkout-observability/main.tf
+test -x scripts/run-exercise.sh
 
-ruby -e 'require "yaml"; YAML.load_file("skill/observability-engineering/SKILL.md"); YAML.load_file("examples/slo-intent.yaml"); puts "yaml parses"'
+ruby -e 'require "yaml"; YAML.load_file("skill/observability-engineering/SKILL.md"); YAML.load_file("examples/slo-intent.yaml"); YAML.load_file("tests/scenarios/checkout-observability.expected.yaml"); YAML.load_file("tests/scenarios/checkout-observability.actual.yaml"); YAML.load_file("tests/scenarios/provider-terraform-adapters.expected.yaml"); YAML.load_file("tests/scenarios/provider-terraform-adapters.actual.yaml"); puts "yaml parses"'
 cmp -s references/observability-model-summary.md skill/observability-engineering/references/observability-model-summary.md
 
 grep -q '^name: observability-engineering$' skill/observability-engineering/SKILL.md
@@ -30,5 +40,19 @@ grep -q 'Usage Scenario Pattern' references/observability-model-summary.md
 grep -q 'Reliability Boundary' references/observability-model-summary.md
 grep -q 'Infra Observability Readiness Pattern' references/observability-model-summary.md
 grep -q 'metadata coverage' references/observability-model-summary.md
+grep -q 'provider-terraform-adapters.md' skill/observability-engineering/SKILL.md
+grep -q 'DataDog/datadog' examples/providers/datadog/checkout-observability/main.tf
+grep -q 'datadog_service_level_objective' examples/providers/datadog/checkout-observability/main.tf
+grep -q 'datadog_monitor' examples/providers/datadog/checkout-observability/main.tf
+grep -q 'datadog_dashboard' examples/providers/datadog/checkout-observability/main.tf
+grep -q 'elastic/elasticstack' examples/providers/elastic/checkout-observability/main.tf
+grep -q 'elasticstack_kibana_slo' examples/providers/elastic/checkout-observability/main.tf
+grep -q 'elasticstack_kibana_action_connector' examples/providers/elastic/checkout-observability/main.tf
+grep -q 'elasticstack_kibana_space' examples/providers/elastic/checkout-observability/main.tf
+if command -v terraform >/dev/null 2>&1; then
+  terraform fmt -check -recursive examples/providers
+fi
+
+./scripts/run-exercise.sh
 
 echo "validation ok"

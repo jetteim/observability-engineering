@@ -22,6 +22,12 @@ It can still operate from its bundled references when the private model is unava
 
 When telemetry collection, transformation, buffering, routing, or delivery can affect SLOs, alert evidence, security, audit, cost, or backend generation, the skill should treat the telemetry pipeline as part of the observability intent. It should define source-to-sink lineage, component contracts, delivery policy, buffer policy, validation, self-observability, and generation gaps before producing backend-specific artifacts.
 
+## Provider Terraform Adapters
+
+Provider output stays generated from neutral intent. The skill includes a Datadog and Elastic Terraform adapter reference at `skill/observability-engineering/references/provider-terraform-adapters.md`, plus example generated files under `examples/providers/`.
+
+Adapters must capture target, blast radius, rollback path, validation commands, and provider gaps. Secrets belong in Terraform variables or provider-supported environment variables, not generated files.
+
 ## Install With Private Model Fetch
 
 Copy `skill/observability-engineering` into the skill directory used by your agent runtime. The install path below tries to fetch or clone the private model repo first. If the private repo is unavailable because auth or network access is missing, the skill still installs and falls back to `references/observability-model-summary.md`.

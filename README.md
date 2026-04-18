@@ -2,6 +2,8 @@
 
 Reusable agent-agnostic skill for building platform-agnostic observability from neutral intent, including infrastructure observability readiness and telemetry pipeline intent.
 
+Telemetry pipeline implementation workflows should use the companion `creating-observability-pipelines` skill when available. This skill remains the parent intent model for SLOs, semantic conventions, alert context, decision dashboards, and generated backend artifacts.
+
 The skill is meant to work with the private model repo when present. The preferred checkout is the source mirror created by the workstation installer:
 
 ```text

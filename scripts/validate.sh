@@ -17,6 +17,7 @@ grep -q 'infrastructure alert context contract' skill/observability-engineering/
 grep -q 'topology correlation' skill/observability-engineering/SKILL.md
 grep -q 'telemetry pipeline health' skill/observability-engineering/SKILL.md
 grep -q 'source-to-sink lineage' skill/observability-engineering/SKILL.md
+grep -q 'creating-observability-pipelines' skill/observability-engineering/SKILL.md
 grep -q 'Telemetry Pipeline Pattern' references/observability-model-summary.md
 grep -q 'SRE rules are generated outputs' skill/observability-engineering/SKILL.md
 grep -q 'service-onboarding-to-observability.md' skill/observability-engineering/SKILL.md

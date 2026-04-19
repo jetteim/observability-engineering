@@ -37,7 +37,11 @@ variable "runbook_url" {
 provider "datadog" {}
 
 locals {
-  source_intent = "ObservabilityIntent/SloIntent/AlertContextContract/DecisionDashboardPlan"
+  source_intent                 = "ObservabilityIntent/SloIntent/AlertContextContract/DecisionDashboardPlan"
+  neutral_slo_window            = "28d"
+  datadog_supported_slo_window  = "30d"
+  datadog_supported_slo_windows = ["7d", "30d", "90d"]
+  provider_generation_gaps      = ["Datadog create/update SLO windows do not support 28d; generated Terraform uses 30d and requires review before apply."]
   tags = [
     "service:${var.service_name}",
     "env:${var.environment}",
@@ -63,7 +67,7 @@ resource "datadog_service_level_objective" "checkout_success_ratio" {
   }
 
   thresholds {
-    timeframe = "30d"
+    timeframe = local.datadog_supported_slo_window
     target    = 99.5
     warning   = 99.7
   }
@@ -85,6 +89,35 @@ resource "datadog_monitor" "checkout_error_budget_burn_rate" {
   include_tags        = true
   require_full_window = false
   tags                = local.tags
+}
+
+resource "datadog_service_definition_yaml" "checkout_api" {
+  service_definition = <<-YAML
+schema-version: v2.2
+dd-service: ${var.service_name}
+team: ${var.owner}
+contacts:
+  - name: Checkout Team
+    type: email
+    contact: checkout-team@example.invalid
+description: Generated from neutral ObservabilityIntent for checkout reliability ownership.
+tier: high
+lifecycle: ${var.environment}
+type: web
+links:
+  - name: Checkout runbook
+    type: runbook
+    url: ${var.runbook_url}
+tags:
+  - service:${var.service_name}
+  - env:${var.environment}
+  - owner:${var.owner}
+  - source-intent:checkout-observability
+extensions:
+  reliability.intent/source:
+    slo-window: ${local.neutral_slo_window}
+    provider-window: ${local.datadog_supported_slo_window}
+YAML
 }
 
 resource "datadog_dashboard" "checkout_reliability_decision" {
@@ -115,4 +148,8 @@ resource "datadog_dashboard" "checkout_reliability_decision" {
       }
     }
   }
+}
+
+output "provider_generation_gaps" {
+  value = local.provider_generation_gaps
 }

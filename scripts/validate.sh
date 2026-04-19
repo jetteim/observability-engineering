@@ -45,6 +45,10 @@ grep -q 'DataDog/datadog' examples/providers/datadog/checkout-observability/main
 grep -q 'datadog_service_level_objective' examples/providers/datadog/checkout-observability/main.tf
 grep -q 'datadog_monitor' examples/providers/datadog/checkout-observability/main.tf
 grep -q 'datadog_dashboard' examples/providers/datadog/checkout-observability/main.tf
+grep -q 'datadog_service_definition_yaml' examples/providers/datadog/checkout-observability/main.tf
+grep -Eq 'neutral_slo_window[[:space:]]*=[[:space:]]*"28d"' examples/providers/datadog/checkout-observability/main.tf
+grep -Eq 'datadog_supported_slo_window[[:space:]]*=[[:space:]]*"30d"' examples/providers/datadog/checkout-observability/main.tf
+grep -q 'Datadog create/update SLO windows do not support 28d' examples/providers/datadog/checkout-observability/main.tf
 grep -q 'elastic/elasticstack' examples/providers/elastic/checkout-observability/main.tf
 grep -q 'elasticstack_kibana_slo' examples/providers/elastic/checkout-observability/main.tf
 grep -q 'elasticstack_kibana_action_connector' examples/providers/elastic/checkout-observability/main.tf

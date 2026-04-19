@@ -25,10 +25,24 @@ required_contents:
       - datadog_service_level_objective
       - datadog_monitor
       - datadog_dashboard
+      - datadog_service_definition_yaml
     generated_for:
       - checkout_success_ratio
       - checkout_error_budget_burn_rate
       - checkout reliability decision dashboard
+      - checkout service ownership metadata
+    source_mapping:
+      datadog_service_level_objective: SloIntent.checkout_success_ratio
+      datadog_monitor: AlertContextContract.checkout_error_budget_burn_rate
+      datadog_dashboard: DecisionDashboardPlan.checkout reliability decision dashboard
+      datadog_service_definition_yaml: ObservabilityIntent.service ownership metadata
+    provider_window_mapping:
+      neutral_window: 28d
+      provider_window: 30d
+      reason: Datadog create/update SLO windows support 7d, 30d, and 90d; 28d is reported as a provider gap.
+      requires_review: true
+    gaps:
+      - Datadog create/update SLO windows do not support 28d; generated Terraform uses 30d and reports the semantic gap.
     validation_commands:
       - terraform fmt -check
       - terraform init -backend=false
@@ -56,6 +70,8 @@ required_contents:
       - neutral source intent is referenced by generated resources
       - provider credentials are variables or environment-derived only
       - terraform syntax commands are listed before apply
+      - Datadog 28d SLO window drift is explicit provider gap, not silent normalization
+      - Datadog service ownership metadata resource exists
       - provider gaps are explicit
   ProviderGenerationEvidence:
     command: ./scripts/run-exercise.sh

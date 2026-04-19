@@ -15,6 +15,7 @@ test -f tests/scenarios/provider-terraform-adapters.actual.yaml
 test -f examples/providers/datadog/checkout-observability/main.tf
 test -f examples/providers/elastic/checkout-observability/main.tf
 test -x scripts/run-exercise.sh
+test -x scripts/validate-provider-terraform.sh
 
 ruby -e 'require "yaml"; YAML.load_file("skill/observability-engineering/SKILL.md"); YAML.load_file("examples/slo-intent.yaml"); YAML.load_file("tests/scenarios/checkout-observability.expected.yaml"); YAML.load_file("tests/scenarios/checkout-observability.actual.yaml"); YAML.load_file("tests/scenarios/provider-terraform-adapters.expected.yaml"); YAML.load_file("tests/scenarios/provider-terraform-adapters.actual.yaml"); puts "yaml parses"'
 cmp -s references/observability-model-summary.md skill/observability-engineering/references/observability-model-summary.md
@@ -55,6 +56,12 @@ grep -q 'elasticstack_kibana_action_connector' examples/providers/elastic/checko
 grep -q 'elasticstack_kibana_space' examples/providers/elastic/checkout-observability/main.tf
 if command -v terraform >/dev/null 2>&1; then
   terraform fmt -check -recursive examples/providers
+fi
+
+bash -n scripts/validate-provider-terraform.sh
+
+if [ "${OBS_VALIDATE_PROVIDER_TERRAFORM:-0}" = "1" ]; then
+  ./scripts/validate-provider-terraform.sh
 fi
 
 ./scripts/run-exercise.sh
